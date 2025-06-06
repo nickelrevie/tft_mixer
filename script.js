@@ -32,6 +32,7 @@ var startCallback = null;
 var endedArray = [];
 var playingArray = [];
 var endedCallbackArray = [];
+var lastRandomizeMode = ''
 
 function playSelectedTracks() {
     stopAllTracks();
@@ -114,6 +115,10 @@ function playSelectedTracks() {
                     if (areAllCheckedTracksDone()) {
                         if (document.getElementById('repeat').checked) {
                             stopAllTracks();
+                            if (document.getElementById('randomizeOnRepeat').checked)
+                            {
+                                repeatRandomize(lastRandomizeMode)
+                            }
                             audio_buffers.forEach(startCallback);
                         }
                     }
@@ -188,6 +193,8 @@ function toggleTrackRealTime(trackIndex) {
 }
 
 function randomSelectTracks(trackSelector = '') {
+    lastRandomizeMode = trackSelector
+
     clearAllSelections();
     var checkboxes = document.querySelectorAll('.trait input[type="checkbox"]' + trackSelector);
     var maxSelect = Math.min(5, checkboxes.length);
@@ -215,6 +222,18 @@ function randomSelectEarlyTracks() {
 
 function randomSelectLateTracks() {
     randomSelectTracks('.late')
+}
+
+function repeatRandomize(randomizeMode = '') {
+    if (randomizeMode === '.early') {
+        randomSelectEarlyTracks()
+    }
+    else if (randomizeMode === '.late') {
+        randomSelectLateTracks()
+    }
+    else {
+        randomSelectTracks()
+    }
 }
 
 function clearAllSelections() {
