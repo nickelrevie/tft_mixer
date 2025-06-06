@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  web:
+     image: python:3.9-alpine
+     ports:
+       - "8080:8000"
+     volumes:
+       - ./:/app
+     working_dir: /app
+     command: python -m http.server 8000
+     restart: unless-stopped
