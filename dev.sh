@@ -25,11 +25,12 @@ print_warning() {
 }
 
 # Docker Compose Commands
-cmd_up() {
+up() {
     print_status "Starting Docker containers..."
     docker-compose up -d
     if [ $? -eq 0 ]; then
         print_success "Containers started successfully"
+        print_status "Access your app at: http://localhost:8080"
         print_status "Access your app at: http://localhost:8080"
     else
         print_error "Failed to start containers"
@@ -37,7 +38,7 @@ cmd_up() {
     fi
 }
 
-cmd_down() {
+down() {
     print_status "Stopping Docker containers..."
     docker-compose down
     if [ $? -eq 0 ]; then
@@ -48,7 +49,7 @@ cmd_down() {
     fi
 }
 
-cmd_restart() {
+restart() {
     print_status "Restarting Docker containers..."
     docker-compose down
     docker-compose up -d
@@ -60,25 +61,25 @@ cmd_restart() {
     fi
 }
 
-cmd_logs() {
+logs() {
     print_status "Showing container logs..."
     docker-compose logs -f
 }
 
-cmd_status() {
+status() {
     print_status "Container status:"
     docker-compose ps
 }
 
 # Development Commands
-cmd_clean() {
+clean() {
     print_status "Cleaning up..."
     docker-compose down
     docker system prune -f
     print_success "Cleanup completed"
 }
 
-cmd_build() {
+build() {
     print_status "Building containers..."
     docker-compose build
     if [ $? -eq 0 ]; then
@@ -90,8 +91,8 @@ cmd_build() {
 }
 
 # Help function
-cmd_help() {
-    echo "Usage: $0 <command>"
+help() {
+    echo "Usage: sh $0 <command>"
     echo ""
     echo "Available commands:"
     echo "  up        - Start Docker containers"
@@ -101,10 +102,6 @@ cmd_help() {
     echo "  status    - Show container status"
     echo "  build     - Build Docker containers"
     echo "  clean     - Stop containers and clean up Docker system"
-    echo ""
-    echo "Git commands:"
-    echo "  git-status - Show Git status"
-    echo "  git-push   - Add, commit, and push to Git"
     echo ""
     echo "Other:"
     echo "  help      - Show this help message"
@@ -119,37 +116,37 @@ cmd_help() {
 main() {
     case "$1" in
         "up")
-            cmd_up
+            up
             ;;
         "down")
-            cmd_down
+            down
             ;;
         "restart")
-            cmd_restart
+            restart
             ;;
         "logs")
-            cmd_logs
+            logs
             ;;
         "status")
-            cmd_status
+            status
             ;;
         "build")
-            cmd_build
+            build
             ;;
         "clean")
-            cmd_clean
+            clean
             ;;
         "help"|"--help"|"-h")
-            cmd_help
+            help
             ;;
         "")
             print_error "No command provided"
-            cmd_help
+            help
             exit 1
             ;;
         *)
             print_error "Unknown command: $1"
-            cmd_help
+            help
             exit 1
             ;;
     esac
